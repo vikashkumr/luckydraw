@@ -31,10 +31,12 @@ public class EventService {
     }
 
     public Optional<Event> getNextEvent() {
+        // returns next event
         return Optional.ofNullable(eventRepository.findEventByEventDateTimeAfterOrderByEventDateTimeAsc(LocalDateTime.now()));
     }
 
     public List<Event> getAllFutureEvents() {
+        //returns all future events to be happened
         return eventRepository.findEventsByEventDateTimeIsAfter(LocalDateTime.now());
     }
 }

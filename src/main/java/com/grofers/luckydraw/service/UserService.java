@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,11 +27,17 @@ public class UserService {
     }
 
     public Optional<User> getUserById(Integer userId) {
-        return Optional.ofNullable(userRepository.findUserByUserId(userId));
+        User user = userRepository.findUserByUserId(userId);
+        if(Objects.nonNull(user)) {
+            user.setPassword("NA");
+        }
+        return Optional.ofNullable(user);
     }
 
     public List<User> getAllUserList() {
-        return userRepository.findAll();
+        List<User> allUsers = userRepository.findAll();
+        allUsers.forEach(user -> user.setPassword("NA"));
+        return allUsers;
     }
 
 }

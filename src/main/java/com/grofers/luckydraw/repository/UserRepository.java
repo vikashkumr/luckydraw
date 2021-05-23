@@ -15,7 +15,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findAllByWinningDateTimeBetween(LocalDateTime lastWeekDateTime, LocalDateTime currentDateTime);
 
-    @Query(value = "update users set ticket_count = ticket_count - 1 where user_id in (:userIds)", nativeQuery = true)
-    void updateRaffleTicketCountForParticipatedUsers(List<Integer> userIds);
-
 }

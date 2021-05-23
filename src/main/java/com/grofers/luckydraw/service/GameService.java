@@ -32,11 +32,14 @@ public class GameService {
     private EventRepository eventRepository;
 
     public String participateInEvent(Integer userId, Integer eventId) {
-
         try {
             User user = userRepository.findUserByUserId(userId);
+
+            //handle condition where user does have or not the raffle ticket
             if(Objects.nonNull(user) && user.getNoOfRaffleTicket() > 0) {
                 participationRepository.save(new Participation(userId, eventId));
+
+                //decr no of raffle ticket user has by 1
                 user.setNoOfRaffleTicket(user.getNoOfRaffleTicket() - 1);
                 userRepository.save(user);
 
@@ -72,15 +75,11 @@ public class GameService {
         try {
             Event event = eventRepository.findByEventId(eventId);
             if(Objects.nonNull(event.getWinnerId())) {
+                //if event has already occurred simply returning winner
                 return Optional.ofNullable(userRepository.findUserByUserId(event.getWinnerId()));
             }
 
             List<Participation> participantsForCurrentEvent = participationRepository.findDistinctByEventId(eventId);
-            List<Integer> userIds = participantsForCurrentEvent
-                    .stream()
-                    .distinct()
-                    .map(Participation::getUserId)
-                    .collect(Collectors.toList());
 
             if(participantsForCurrentEvent.size() == 0) {
                 return Optional.empty();
@@ -88,14 +87,18 @@ public class GameService {
             int mn = 0, mx = participantsForCurrentEvent.size() - 1;
             int range = mx - mn + 1;
 
+            //getting random user to declare winner
             int winningParticipantIndex = (int) (Math.random() * range) + mn;
+
+            //assigning winnerId to event
             event.setWinnerId(participantsForCurrentEvent.get(winningParticipantIndex).getUserId());
             User winner = userRepository.findUserByUserId(participantsForCurrentEvent.get(winningParticipantIndex).getUserId());
             if(Objects.nonNull(winner)) {
+                //setting date-time of winning
                 winner.setWinningDateTime(LocalDateTime.now());
                 userRepository.save(winner);
+                winner.setPassword("NA"); // hiding password
             }
-            userRepository.updateRaffleTicketCountForParticipatedUsers(userIds);
             return Optional.ofNullable(winner);
         }
         catch (Exception e) {
@@ -107,6 +110,8 @@ public class GameService {
     }
 
     public List<User> getAllWinnersInLastWeek() {
-        return userRepository.findAllByWinningDateTimeBetween(LocalDateTime.now().minusDays(7), LocalDateTime.now());
+        List<User> winnerListInLastWeek = userRepository.findAllByWinningDateTimeBetween(LocalDateTime.now().minusDays(7), LocalDateTime.now());
+        winnerListInLastWeek.forEach(winner -> winner.setPassword("NA"));
+        return winnerListInLastWeek;
     }
 }
