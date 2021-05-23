@@ -15,25 +15,25 @@ Java 8
 # Project Structure
 
 >- proper patterns has been followed to build the application with controller, service layer and repository
->- Controllers
-    - EventController - Handle frontend request to perform an event related task (add an event, see next event, etc)
-    - UserController  - Handle frontend request to perform user related task (register user, get user, etc)
-    - GameController -  Handle frontend request to perform Game related task (participation, getWinner, etc)
+- Controllers
+   > - EventController - Handle frontend request to perform an event related task (add an event, see next event, etc)
+   > - UserController  - Handle frontend request to perform user related task (register user, get user, etc)
+   > - GameController -  Handle frontend request to perform Game related task (participation, getWinner, etc)
 
->- Service    
-    - EventService - implemented logic for eventController
-    - GameService - implemented logic for gameController
-    - UserService - implemented logic for userController
+- Service    
+   > - EventService - implemented logic for eventController
+   > - GameService - implemented logic for gameController
+   > - UserService - implemented logic for userController
 
->- Repository
-    - eventRepository
-    - gameRepository
-    - userRepository
+- Repository
+   > - eventRepository
+   > - gameRepository
+   > - userRepository
 
->- Entity
-    - Users
-    - Event
-    - Participation
+- Entity
+   > - Users
+   > - Event
+   > - Participation
 
 # Steps to run application
 - Install postgres database in system and create Role and database
