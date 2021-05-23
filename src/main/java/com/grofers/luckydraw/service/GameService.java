@@ -6,6 +6,8 @@ import com.grofers.luckydraw.entity.User;
 import com.grofers.luckydraw.repository.EventRepository;
 import com.grofers.luckydraw.repository.ParticipationRepository;
 import com.grofers.luckydraw.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import java.util.Optional;
 
 @Service
 public class GameService {
+
+    private static final Logger logger= LoggerFactory.getLogger(GameService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -36,11 +40,12 @@ public class GameService {
             User user = userRepository.findUserByUserId(userId);
             int ticket_count = user.getNoOfRaffleTicket();
             user.setNoOfRaffleTicket(ticket_count + 1);
-
+            logger.info("TICKET_BOUGHT_SUCCESSFULLY_FOR userId: {}", userId);
             return "raffle ticket successfully bought for user" + userId;
         }
         catch (Exception e) {
             e.printStackTrace();
+            logger.error("ERROR_IN buyRaffleTicket userId: {}", userId);
             return "failed to buy raffle ticket for user" + userId;
         }
     }
@@ -68,10 +73,10 @@ public class GameService {
                 userRepository.save(winner);
             }
             return Optional.ofNullable(winner);
-
         }
         catch (Exception e) {
             e.printStackTrace();
+            logger.error("ERROR_IN getWinnerForEvent Service having eventId: {}", eventId);
             return Optional.empty();
         }
 
