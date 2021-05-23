@@ -5,7 +5,7 @@ among all registered user in a particular event, among all participants one will
 # Database
 PostgreSql database (A relational powerful db)
 
-#Requirement Setup
+# Requirement Setup
 IDE : IntelliJ IDEA | Eclipse (Anyone would work) \
 Java 8
 
@@ -13,30 +13,29 @@ Java 8
 - main task is to finding winner among all participants for that I have used randomisation technique among all, have used Math.random() function.
 
 # Project Structure
->
-- proper patterns has been followed to build the application with controller, service layer and repository
-- Controllers
+
+>- proper patterns has been followed to build the application with controller, service layer and repository
+>- Controllers
     - EventController - Handle frontend request to perform an event related task (add an event, see next event, etc)
     - UserController  - Handle frontend request to perform user related task (register user, get user, etc)
     - GameController -  Handle frontend request to perform Game related task (participation, getWinner, etc)
 
-- Service    
+>- Service    
     - EventService - implemented logic for eventController
     - GameService - implemented logic for gameController
     - UserService - implemented logic for userController
 
-- Repository
+>- Repository
     - eventRepository
     - gameRepository
     - userRepository
 
-- Entity
+>- Entity
     - Users
     - Event
     - Participation
->
 
-#Steps to run application
+# Steps to run application
 - Install postgres database in system and create Role and database
 - commands: 
   - sudo apt install postgresql postgresql-contrib
@@ -44,7 +43,7 @@ Java 8
 - clone the repo and run command : mvn clean install -DskipTests  
 - add database configuration, and you are good to go
 
-#Some cases handled
+# Some cases handled
 - User can only participate if he has enough raffle ticket
 - decr raffle count after every participation
 
