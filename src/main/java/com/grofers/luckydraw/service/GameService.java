@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GameService {
@@ -31,8 +32,24 @@ public class GameService {
     private EventRepository eventRepository;
 
     public String participateInEvent(Integer userId, Integer eventId) {
-        participationRepository.save(new Participation(userId, eventId));
-        return "user : " + userId + "has been successfully participated in event" + eventId;
+
+        try {
+            User user = userRepository.findUserByUserId(userId);
+            if(Objects.nonNull(user) && user.getNoOfRaffleTicket() > 0) {
+                participationRepository.save(new Participation(userId, eventId));
+                user.setNoOfRaffleTicket(user.getNoOfRaffleTicket() - 1);
+                userRepository.save(user);
+
+                logger.info("user : {}  has been successfully participated in event : {}", userId, eventId);
+                return "user : " + userId + " has been successfully participated in event " + eventId;
+            }
+            return "user does not have raffle ticket";
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            logger.error("ERROR_IN participateInEvent has userId: {} and eventId: {}", userId, eventId);
+            return "failed to participate";
+        }
     }
 
     public String buyRaffleTicket(Integer userId) {
@@ -40,8 +57,9 @@ public class GameService {
             User user = userRepository.findUserByUserId(userId);
             int ticket_count = user.getNoOfRaffleTicket();
             user.setNoOfRaffleTicket(ticket_count + 1);
+            userRepository.save(user);
             logger.info("TICKET_BOUGHT_SUCCESSFULLY_FOR userId: {}", userId);
-            return "raffle ticket successfully bought for user" + userId;
+            return "raffle ticket successfully bought for userId: " + userId;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -58,6 +76,11 @@ public class GameService {
             }
 
             List<Participation> participantsForCurrentEvent = participationRepository.findDistinctByEventId(eventId);
+            List<Integer> userIds = participantsForCurrentEvent
+                    .stream()
+                    .distinct()
+                    .map(Participation::getUserId)
+                    .collect(Collectors.toList());
 
             if(participantsForCurrentEvent.size() == 0) {
                 return Optional.empty();
@@ -72,6 +95,7 @@ public class GameService {
                 winner.setWinningDateTime(LocalDateTime.now());
                 userRepository.save(winner);
             }
+            userRepository.updateRaffleTicketCountForParticipatedUsers(userIds);
             return Optional.ofNullable(winner);
         }
         catch (Exception e) {

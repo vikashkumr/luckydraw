@@ -1,5 +1,8 @@
 package com.grofers.luckydraw.entity;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,14 +17,28 @@ public class User {
     @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", nullable = false)
     private String userName;
 
-    @Column(name = "ticket_count")
-    private Integer noOfRaffleTicket;
+    @Column(name = "ticket_count", nullable = false)
+    private int noOfRaffleTicket;
 
     @Column(name = "winning_date")
     private LocalDateTime winningDateTime;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     public LocalDateTime getWinningDateTime() {
         return winningDateTime;
@@ -30,10 +47,6 @@ public class User {
     public void setWinningDateTime(LocalDateTime winningDateTime) {
         this.winningDateTime = winningDateTime;
     }
-
-    private String email;
-
-    private String password;
 
     public Integer getUserId() {
         return userId;

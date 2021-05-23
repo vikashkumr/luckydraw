@@ -22,7 +22,7 @@ public class GameController {
         return gameService.participateInEvent(userId, eventId);
     }
 
-    @GetMapping("/buy_raffle_ticket")
+    @PostMapping("/buy_raffle_ticket")
     public String buyRaffleTicket(@RequestParam Integer userId) {
         return gameService.buyRaffleTicket(userId);
     }
