@@ -47,6 +47,9 @@ Java 8
 - User can only participate if he has enough raffle ticket
 - decr raffle count after every participation
 
+# ER Diagram
+> pic link : https://ibb.co/HXq4kVS
+
     
 
 
